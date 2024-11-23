@@ -81,4 +81,35 @@ export default function UserRoutes(app) {
     app.post("/api/users/signin", signin);
     app.post("/api/users/signout", signout);
     app.post("/api/users/profile", profile);
+
+
+    app.get("/api/users/:userId/enrollments", (req, res) => {
+        const { userId } = req.params;
+        if (userId === "current") {
+            const currentUser = req.session["currentUser"];
+            if (!currentUser) {
+                res.sendStatus(401);
+                return;
+            }
+            const enrollments = enrollmentsDao.findEnrollmentsForUser(currentUser._id);
+            res.json(enrollments);
+        } else {
+            const enrollments = enrollmentsDao.findEnrollmentsForUser(userId);
+            res.json(enrollments);
+        }
+    });
+
+
+    app.post("/api/users/:userId/enrollments/:courseId", (req, res) => {
+        const { userId, courseId } = req.params;
+        const enrollment = enrollmentsDao.enrollUserInCourse(userId, courseId);
+        res.json(enrollment);
+    });
+
+    // Unenroll user from a course
+    app.delete("/api/users/:userId/enrollments/:courseId", (req, res) => {
+        const { userId, courseId } = req.params;
+        enrollmentsDao.unenrollUserFromCourse(userId, courseId);
+        res.sendStatus(200);
+    });
 }
