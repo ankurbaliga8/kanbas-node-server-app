@@ -35,7 +35,7 @@ export default [
     "lastName": "Romanoff",
     "email": "natasha@avengers.com",
     "dob": "1984-11-22",
-    "role": "TA",
+    "role": "ADMIN",
     "loginId": "001234564S",
     "section": "S101",
     "lastActivity": "2020-11-05",
@@ -111,4 +111,5 @@ export default [
     "lastActivity": "2020-11-11",
     "totalActivity": "21:32:43"
   }
+
 ]

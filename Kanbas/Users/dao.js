@@ -1,13 +1,39 @@
-import db from "../Database/index.js";
-let { users } = db;
+import model from "./model.js";
 
-export const findAllUsers = () => users;
-export const findUserById = (userId) => users.find((user) => user._id === userId);
-export const findUserByUsername = (username) => users.find((user) => user.username === username);
+// Find all users
+export const findAllUsers = () => model.find();
+
+// Find user by ID
+export const findUserById = (userId) => model.findById(userId);
+
+// Find user by username
+export const findUserByUsername = (username) => model.findOne({ username });
+
+// Find user by credentials
 export const findUserByCredentials = (username, password) =>
-    users.find((user) => user.username === username && user.password === password);
-export const updateUser = (userId, user) => (users = users.map((u) => (u._id === userId ? user : u)));
-export const deleteUser = (userId) => (users = users.filter((u) => u._id !== userId));
-export const createUser = (user) => (users = [...users, { ...user, _id: Date.now() }]);
+    model.findOne({ username, password });
 
+// Update a user by ID
+export const updateUser = (userId, user) =>
+    model.updateOne({ _id: userId }, { $set: user });
+
+// Delete a user by ID
+export const deleteUser = (userId) => model.deleteOne({ _id: userId });
+
+// Find users by role
+export const findUsersByRole = (role) => model.find({ role });
+
+// Find users by partial name
+export const findUsersByPartialName = (partialName) => {
+    const regex = new RegExp(partialName, "i"); // Case-insensitive search
+    return model.find({
+        $or: [{ firstName: { $regex: regex } }, { lastName: { $regex: regex } }],
+    });
+};
+
+// Create a new user
+export const createUser = (user) => {
+    delete user._id; // Ensure no conflicting `_id` is passed
+    return model.create(user);
+};
 
