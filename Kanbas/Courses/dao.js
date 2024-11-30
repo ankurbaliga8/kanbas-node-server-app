@@ -1,7 +1,7 @@
-import Database from "../Database/index.js";
+import model from "./model.js";
 
 export function findAllCourses() {
-    return Database.courses;
+    return model.find();
 }
 
 export function findCoursesForEnrolledUser(userId) {
@@ -15,26 +15,15 @@ export function findCoursesForEnrolledUser(userId) {
 }
 
 export function createCourse(course) {
-    const newCourse = {
-        ...course,
-        _id: Date.now().toString(),
-    };
-    Database.courses = [...Database.courses, newCourse];
-    return newCourse;
+    delete course._id;
+    return model.create(course);
+
 }
 
 export function updateCourse(courseId, courseUpdates) {
-    const course = Database.courses.find((c) => c._id === courseId);
-    if (course) {
-        Object.assign(course, courseUpdates);
-        return course;
-    }
-    throw new Error("Course not found");
+    return model.updateOne({ _id: courseId }, courseUpdates);
 }
 
 export function deleteCourse(courseId) {
-    Database.courses = Database.courses.filter((course) => course._id !== courseId);
-    Database.enrollments = Database.enrollments.filter(
-        (enrollment) => enrollment.course !== courseId
-    );
+    return model.deleteOne({ _id: courseId });
 }
