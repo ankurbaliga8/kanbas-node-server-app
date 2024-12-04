@@ -1,45 +1,45 @@
-import * as dao from './dao.js';
-import Database from "../Database/index.js";
+import db from "../Database/index.js";
 
-export default function QuizRoutes(app) {
-    app.get('/api/courses/:courseId/quizzes', (req, res) => {
-        const { courseId } = req.params;
-        console.log("Received request for course:", courseId);
-        console.log("All quizzes:", Database.quizzes);
-        const quizzes = dao.findQuizzesForCourse(courseId);
+function QuizRoutes(app) {
+    app.get("/api/courses/:cid/quizzes", (req, res) => {
+        const { cid } = req.params;
+        console.log("Received request for course:", cid);
+        console.log("All quizzes:", db.quizzes);
+        const quizzes = db.quizzes.filter((quiz) => quiz.course === cid);
         console.log("Filtered quizzes for course:", quizzes);
         res.json(quizzes);
     });
 
-    app.post('/api/courses/:courseId/quizzes', (req, res) => {
-        const { courseId } = req.params;
-        const quiz = { ...req.body, course: courseId };
-        const newQuiz = dao.createQuiz(quiz);
+    app.post("/api/courses/:cid/quizzes", (req, res) => {
+        const { cid } = req.params;
+        const newQuiz = {
+            ...req.body,
+            course: cid,
+            _id: new Date().getTime().toString(),
+        };
+        db.quizzes.push(newQuiz);
         res.json(newQuiz);
     });
 
-    app.put('/api/quizzes/:quizId', (req, res) => {
-        const { quizId } = req.params;
-        const quizUpdates = req.body;
-        console.log("Updating quiz:", quizId);
-        console.log("Update payload:", quizUpdates);
-        try {
-            const updatedQuiz = dao.updateQuiz(quizId, quizUpdates);
-            console.log("Quiz after update:", updatedQuiz);
-            res.json(updatedQuiz);
-        } catch (error) {
-            console.error("Update failed:", error);
-            res.status(404).send({ message: 'Quiz not found' });
+    app.put("/api/quizzes/:qid", (req, res) => {
+        const { qid } = req.params;
+        const quizIndex = db.quizzes.findIndex((q) => q._id === qid);
+        if (quizIndex !== -1) {
+            db.quizzes[quizIndex] = {
+                ...db.quizzes[quizIndex],
+                ...req.body,
+            };
+            res.json(db.quizzes[quizIndex]);
+        } else {
+            res.status(404).json({ message: "Quiz not found" });
         }
     });
 
-    app.delete('/api/quizzes/:quizId', (req, res) => {
-        const { quizId } = req.params;
-        try {
-            dao.deleteQuiz(quizId);
-            res.sendStatus(204);
-        } catch (error) {
-            res.status(404).send({ message: 'Quiz not found' });
-        }
+    app.delete("/api/quizzes/:qid", (req, res) => {
+        const { qid } = req.params;
+        db.quizzes = db.quizzes.filter((q) => q._id !== qid);
+        res.sendStatus(200);
     });
 }
+
+export default QuizRoutes;

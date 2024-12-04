@@ -2,10 +2,9 @@ import Database from "../Database/index.js";
 
 export const findQuizzesForCourse = (courseId) => {
     console.log("Finding quizzes for course:", courseId);
-    console.log("Available quizzes:", Database.quizzes);
-    const filtered = Database.quizzes.filter((quiz) => quiz.course === courseId);
-    console.log("Filtered quizzes:", filtered);
-    return filtered;
+    const quizzes = Database.quizzes.filter((quiz) => quiz.course === courseId);
+    console.log("Filtered quizzes for course:", quizzes);
+    return quizzes;
 };
 
 export const createQuiz = (quiz) => {
@@ -47,3 +46,34 @@ export const deleteQuiz = (quizId) => {
         throw new Error('Quiz not found');
     }
 };
+
+const addQuestionToQuiz = (quizId, question) => {
+    const quiz = Database.quizzes.find((q) => q._id === quizId);
+    if (!quiz) throw new Error("Quiz not found");
+    if (!Array.isArray(quiz.questions)) {
+        quiz.questions = [];
+    }
+    quiz.questions.push(question);
+    return question;
+};
+
+const updateQuestionInQuiz = (quizId, questionId, updates) => {
+    const quiz = Database.quizzes.find((q) => q._id === quizId);
+    if (!quiz || !Array.isArray(quiz.questions)) {
+        throw new Error("Quiz or questions not found");
+    }
+    const index = quiz.questions.findIndex((q) => q._id === questionId);
+    if (index === -1) throw new Error("Question not found");
+    quiz.questions[index] = { ...quiz.questions[index], ...updates };
+    return quiz.questions[index];
+};
+
+const deleteQuestionFromQuiz = (quizId, questionId) => {
+    const quiz = Database.quizzes.find((q) => q._id === quizId);
+    if (!quiz || !Array.isArray(quiz.questions)) {
+        throw new Error("Quiz or questions not found");
+    }
+    quiz.questions = quiz.questions.filter((q) => q._id !== questionId);
+};
+
+export { addQuestionToQuiz, updateQuestionInQuiz, deleteQuestionFromQuiz };
