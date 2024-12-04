@@ -110,5 +110,16 @@ export default [
     "section": "S101",
     "lastActivity": "2020-11-11",
     "totalActivity": "21:32:43"
+  },
+  {
+    "_id": "901",
+    "username": "ankur",
+    "password": "ankur123",
+    "firstName": "Ankur",
+    "lastName": "Baliga",
+    "email": "ankur@ankur.com",
+    "dob": "1990-01-01",
+    "role": "FACULTY",
+    "loginId": "001234570S",
   }
 ]
