@@ -18,6 +18,14 @@ export default [
                 "type": "MULTIPLE_CHOICE",
                 "choices": ["Lift", "Drag", "Thrust", "Weight"],
                 "correctChoice": 0
+            },
+            {
+                "_id": "QQ102",
+                "title": "Sample Question 2",
+                "points": 10,
+                "questionText": "is prince bkl?",
+                "type": "TRUE_FALSE",
+                "correctAnswer": true
             }
         ]
     },
