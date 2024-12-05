@@ -3,11 +3,8 @@ import db from "../Database/index.js";
 function QuizRoutes(app) {
     app.get("/api/courses/:cid/quizzes", (req, res) => {
         const { cid } = req.params;
-        console.log("Received request for course:", cid);
-        console.log("All quizzes:", db.quizzes);
-        const quizzes = db.quizzes.filter((quiz) => quiz.course === cid);
-        console.log("Filtered quizzes for course:", quizzes);
-        res.json(quizzes);
+        const filteredQuizzes = db.quizzes.filter((quiz) => quiz.course === cid);
+        res.json(filteredQuizzes);
     });
 
     app.post("/api/courses/:cid/quizzes", (req, res) => {
@@ -37,8 +34,55 @@ function QuizRoutes(app) {
 
     app.delete("/api/quizzes/:qid", (req, res) => {
         const { qid } = req.params;
-        db.quizzes = db.quizzes.filter((q) => q._id !== qid);
-        res.sendStatus(200);
+        const quizIndex = db.quizzes.findIndex((q) => q._id === qid);
+        if (quizIndex !== -1) {
+            db.quizzes.splice(quizIndex, 1);
+            res.sendStatus(200);
+        } else {
+            res.status(404).json({ message: "Quiz not found" });
+        }
+    });
+
+    app.post("/api/quizzes/:quizId/attempts", (req, res) => {
+        const { quizId } = req.params;
+        const attempt = req.body;
+
+        const existingAttempts = db.attempts.filter(
+            a => a.quizId === quizId && a.studentId === attempt.studentId
+        );
+
+        const newAttempt = {
+            ...attempt,
+            _id: new Date().getTime().toString(),
+            quizId,
+            attemptNumber: existingAttempts.length + 1
+        };
+
+        db.attempts.push(newAttempt);
+        res.json(newAttempt);
+    });
+
+    app.get("/api/quizzes/:quizId/attempts/:studentId", (req, res) => {
+        const { quizId, studentId } = req.params;
+        const quizAttempts = db.attempts.filter(
+            a => a.quizId === quizId && a.studentId === studentId
+        ).sort((a, b) => b.attemptNumber - a.attemptNumber);
+        res.json(quizAttempts);
+    });
+
+    app.get("/api/quizzes/:quizId/attempts/:studentId/:attemptNumber", (req, res) => {
+        const { quizId, studentId, attemptNumber } = req.params;
+        const attempt = db.attempts.find(
+            a => a.quizId === quizId &&
+                a.studentId === studentId &&
+                a.attemptNumber === parseInt(attemptNumber)
+        );
+
+        if (attempt) {
+            res.json(attempt);
+        } else {
+            res.status(404).json({ message: "Attempt not found" });
+        }
     });
 }
 

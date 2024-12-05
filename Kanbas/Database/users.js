@@ -121,5 +121,16 @@ export default [
     "dob": "1990-01-01",
     "role": "FACULTY",
     "loginId": "001234570S",
+  },
+  {
+    "_id": "902",
+    "username": "student",
+    "password": "student123",
+    "firstName": "Student",
+    "lastName": "One",
+    "email": "student@student.com",
+    "dob": "1990-01-01",
+    "role": "STUDENT",
+    "loginId": "001234571S",
   }
 ]

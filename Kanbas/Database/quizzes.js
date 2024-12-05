@@ -5,9 +5,9 @@ export default [
         "course": "RS101",
         "description": "Quiz on basic principles of aerodynamics.",
         "points": 50,
-        "dueDate": "2024-05-22",
-        "availableFrom": "2024-05-15",
-        "availableUntil": "2024-05-23",
+        "dueDate": "2024-12-08",
+        "availableFrom": "2024-12-03",
+        "availableUntil": "2024-12-06",
         "published": false,
         "questions": [
             {

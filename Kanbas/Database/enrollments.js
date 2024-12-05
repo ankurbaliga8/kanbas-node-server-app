@@ -11,6 +11,8 @@ export default [
   { "_id": "10", "user": "123", "course": "RS103" },
   { "_id": "11", "user": "901", "course": "RS101" },
   { "_id": "12", "user": "901", "course": "RS103" },
-  { "_id": "13", "user": "901", "course": "RS108" }
-
+  { "_id": "13", "user": "901", "course": "RS108" },
+  { "_id": "14", "user": "902", "course": "RS101" },
+  { "_id": "15", "user": "902", "course": "RS102" },
+  { "_id": "16", "user": "902", "course": "RS103" },
 ]
