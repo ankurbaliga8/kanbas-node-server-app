@@ -23,7 +23,7 @@ export default [
                 "_id": "QQ102",
                 "title": "Sample Question 2",
                 "points": 10,
-                "questionText": "is prince bkl?",
+                "questionText": "Is India a democratic country?",
                 "type": "TRUE_FALSE",
                 "correctAnswer": true
             },
