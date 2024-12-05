@@ -26,6 +26,15 @@ export default [
                 "questionText": "is prince bkl?",
                 "type": "TRUE_FALSE",
                 "correctAnswer": true
+            },
+            {
+                "_id": "QQ103",
+                "title": "Sample Question 3",
+                "points": 10,
+                "questionText": "Who is spider man?",
+                "type": "FILL_BLANK",
+                "correctAnswer": "peter parker"
+
             }
         ]
     },
