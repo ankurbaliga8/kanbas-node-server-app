@@ -1,29 +1,42 @@
 import model from "./model.js";
 
-export function findAllCourses() {
-    return model.find();
+export async function findAllCourses() {
+    try {
+        return await model.find();
+    } catch (error) {
+        console.error("Error in findAllCourses:", error);
+        throw error;
+    }
 }
 
-export function findCoursesForEnrolledUser(userId) {
-    const { courses, enrollments } = Database;
-    return courses.filter((course) =>
-        enrollments.some(
-            (enrollment) =>
-                enrollment.user === userId && enrollment.course === course._id
-        )
-    );
+export async function createCourse(course) {
+    try {
+        // Generate a simple numeric ID if not provided
+        const courseToCreate = {
+            ...course,
+            _id: course._id || Date.now().toString()
+        };
+        return await model.create(courseToCreate);
+    } catch (error) {
+        console.error("Error in createCourse:", error);
+        throw error;
+    }
 }
 
-export function createCourse(course) {
-    delete course._id;
-    return model.create(course);
-
+export async function updateCourse(courseId, courseUpdates) {
+    try {
+        return await model.findByIdAndUpdate(courseId, courseUpdates, { new: true });
+    } catch (error) {
+        console.error("Error in updateCourse:", error);
+        throw error;
+    }
 }
 
-export function updateCourse(courseId, courseUpdates) {
-    return model.updateOne({ _id: courseId }, courseUpdates);
-}
-
-export function deleteCourse(courseId) {
-    return model.deleteOne({ _id: courseId });
+export async function deleteCourse(courseId) {
+    try {
+        return await model.findByIdAndDelete(courseId);
+    } catch (error) {
+        console.error("Error in deleteCourse:", error);
+        throw error;
+    }
 }
